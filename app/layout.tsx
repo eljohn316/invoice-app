@@ -1,6 +1,10 @@
 import type { Metadata } from 'next';
 import { League_Spartan } from 'next/font/google';
+
 import '@/app/globals.css';
+
+import { cn } from '@/lib/utils';
+import { Navigation } from '@/components/navigation';
 
 const leagueSpartan = League_Spartan({
   variable: '--font-league-spartan',
@@ -18,8 +22,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${leagueSpartan.variable} antialiased`}>
-        {children}
+      <body
+        className={cn(
+          'flex min-h-svh flex-col antialiased lg:flex-row',
+          leagueSpartan.variable
+        )}>
+        <Navigation />
+        <div className="relative flex-1 px-6 py-8 md:px-12 md:py-[3.75rem] lg:mx-auto lg:max-w-[45.625rem] lg:px-4 lg:py-[4.875rem]">
+          {children}
+        </div>
       </body>
     </html>
   );
