@@ -1,7 +1,12 @@
+'use client';
+
 import Image from 'next/image';
 import { SunIcon, MoonIcon } from '@/components/icons';
+import { useTheme } from 'next-themes';
 
 export function Navigation() {
+  const { setTheme } = useTheme();
+
   return (
     <nav className="relative z-50 flex h-20 bg-[#373B53] lg:h-auto lg:w-[103px] lg:flex-col lg:rounded-r-[1.25rem] dark:bg-[#1E2139]">
       <div className="absolute inset-y-0 lg:inset-y-auto">
@@ -18,9 +23,17 @@ export function Navigation() {
       <div className="flex flex-1 justify-end lg:flex-col lg:items-center">
         <button
           type="button"
-          className="cursor-pointer text-[#7E88C3] hover:text-[#DFE3FA] lg:mt-auto">
+          className="cursor-pointer text-[#7E88C3] hover:text-[#DFE3FA] lg:mt-auto dark:hidden"
+          onClick={() => setTheme('dark')}>
           <span className="sr-only">Toggle dark mode</span>
           <MoonIcon aria-hidden="true" />
+        </button>
+        <button
+          type="button"
+          className="hidden cursor-pointer text-[#858BB2] hover:text-[#DFE3FA] lg:mt-auto dark:block"
+          onClick={() => setTheme('light')}>
+          <span className="sr-only">Toggle light mode</span>
+          <SunIcon aria-hidden="true" />
         </button>
       </div>
       <div className="ml-6 flex-none border-l border-[#494e6e] px-6 py-5 md:ml-8 md:px-8 md:py-6 lg:mt-8 lg:ml-0 lg:border-t lg:border-l-0">
