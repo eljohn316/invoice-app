@@ -1,7 +1,4 @@
-import {
-  InvoiceListItem,
-  InvoiceListItemSkeleton
-} from '@/components/invoice-list-item';
+import { InvoiceListItem } from '@/components/invoice-list-item';
 
 const invoices = [
   {

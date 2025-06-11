@@ -4,7 +4,7 @@ type Status = 'pending' | 'paid' | 'draft';
 
 export const resolvers = {
   Query: {
-    invoices: async (_: any, args: { status?: Status }) => {
+    invoices: async (_: null, args: { status?: Status }) => {
       return await db.invoice.findMany({
         where: {
           status: args.status
