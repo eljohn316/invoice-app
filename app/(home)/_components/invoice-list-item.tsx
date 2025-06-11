@@ -1,18 +1,13 @@
 import * as React from 'react';
-import { cn, formatDate } from '@/lib/utils';
 import { ArrowRightIcon } from '@/components/icons';
 import { Text } from '@/components/text';
 import { InvoiceStatus } from '@/components/invoice-status';
 import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { cn, formatDate } from '@/lib/utils';
+import type { InvoiceItem } from '@/app/(home)/_types/invoice';
 
-function TextBold({
-  children,
-  className
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
+function TextBold({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
     <Text
       className={cn(
@@ -24,17 +19,7 @@ function TextBold({
   );
 }
 
-type Status = 'pending' | 'paid' | 'draft';
-
-export type Invoice = {
-  id: string;
-  clientName: string;
-  paymentDue: Date;
-  total: number;
-  status: Status;
-};
-
-export function InvoiceListItem({ invoice }: { invoice: Invoice }) {
+export function InvoiceListItem({ invoice }: { invoice: InvoiceItem }) {
   return (
     <Card className="p-6 md:py-[1.875rem] lg:px-8">
       <div className="space-y-6 md:hidden">
@@ -47,8 +32,8 @@ export function InvoiceListItem({ invoice }: { invoice: Invoice }) {
         </div>
         <div className="flex items-center justify-between">
           <div className="space-y-[0.5625rem]">
-            <Text>Due {formatDate(invoice.paymentDue)}</Text>
-            <TextBold>&pound; {invoice.total}</TextBold>
+            {invoice.paymentDue && <Text>Due {formatDate(invoice.paymentDue)}</Text>}
+            {invoice.total && <TextBold>&pound; {+invoice.total}</TextBold>}
           </div>
           <InvoiceStatus status={invoice.status} />
         </div>
@@ -58,15 +43,12 @@ export function InvoiceListItem({ invoice }: { invoice: Invoice }) {
           <span className="text-[#7E88C3]">#</span>
           {invoice.id}
         </TextBold>
-        <Text className="ml-7 max-w-24 flex-auto">
-          Due {formatDate(invoice.paymentDue)}
-        </Text>
+        {invoice.paymentDue && (
+          <Text className="ml-7 max-w-24 flex-auto">Due {formatDate(invoice.paymentDue)}</Text>
+        )}
         <Text className="ml-12 flex-1">{invoice.clientName}</Text>
-        <TextBold className="shrink-0">&pound; {invoice.total}</TextBold>
-        <InvoiceStatus
-          status={invoice.status}
-          className="ml-10 max-w-[6.5rem] flex-none"
-        />
+        {invoice.total && <TextBold className="shrink-0">&pound; {+invoice.total}</TextBold>}
+        <InvoiceStatus status={invoice.status} className="ml-10 max-w-[6.5rem] flex-none" />
         <div className="ml-5 flex-none">
           <span className="sr-only">View invoice</span>
           <ArrowRightIcon aria-hidden="true" />
@@ -76,10 +58,7 @@ export function InvoiceListItem({ invoice }: { invoice: Invoice }) {
   );
 }
 
-export function InvoiceListItemSkeleton({
-  className,
-  ...props
-}: React.ComponentProps<'div'>) {
+export function InvoiceListItemSkeleton({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <Card className={cn('p-6 md:py-[1.875rem] lg:px-8', className)} {...props}>
       <div className="space-y-6 md:hidden">

@@ -3,9 +3,9 @@ import { League_Spartan } from 'next/font/google';
 
 import '@/app/globals.css';
 
-import { cn } from '@/lib/utils';
 import { Navigation } from '@/components/navigation';
 import { ThemeProvider } from '@/components/theme-provider';
+import { cn } from '@/lib/utils';
 
 const leagueSpartan = League_Spartan({
   variable: '--font-league-spartan',
@@ -25,7 +25,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          'flex min-h-svh flex-col bg-[#F8F8FB] antialiased lg:flex-row dark:bg-[#141625]',
+          'flex min-h-svh flex-col overflow-y-scroll bg-[#F8F8FB] antialiased lg:flex-row dark:bg-[#141625]',
           leagueSpartan.variable
         )}>
         <ThemeProvider
