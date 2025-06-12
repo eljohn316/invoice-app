@@ -7,10 +7,13 @@ export const resolvers = {
   Date: DateResolver,
 
   Query: {
-    invoices: async (_: null, args: { status?: Status }) => {
+    invoices: async (_: null, args: { status: Status[] }) => {
+      const status: Status[] =
+        args.status.length === 0 ? ['pending', 'paid', 'draft'] : args.status;
+
       return await db.invoice.findMany({
         where: {
-          status: args.status
+          status: { in: status }
         },
         include: {
           clientAddress: true,

@@ -49,6 +49,6 @@ export const typeDefs = gql`
   }
 
   type Query {
-    invoices(status: String): [Invoice]!
+    invoices(status: [String]!): [Invoice]!
   }
 `;
