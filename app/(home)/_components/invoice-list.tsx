@@ -1,15 +1,42 @@
+'use client';
+
 import Image from 'next/image';
-import { Text } from '@/components/text';
-import { InvoiceListItem } from '@/app/(home)/_components/invoice-list-item';
-import type { InvoiceItems } from '@/app/(home)/_types/invoice';
 import Link from 'next/link';
 
-interface InvoiceListProps {
-  invoices: InvoiceItems;
-}
+import { Text } from '@/components/text';
+import {
+  InvoiceListItem,
+  InvoiceListItemSkeleton
+} from '@/app/(home)/_components/invoice-list-item';
+import { useInvoices } from '@/app/(home)/_components/invoices-provider';
 
-export function InvoiceList({ invoices }: InvoiceListProps) {
-  if (invoices.length === 0)
+export function InvoiceList() {
+  const { isLoading, error, data } = useInvoices();
+
+  if (isLoading) {
+    return (
+      <div className="space-y-4">
+        <InvoiceListItemSkeleton />
+        <InvoiceListItemSkeleton />
+        <InvoiceListItemSkeleton />
+        <InvoiceListItemSkeleton />
+        <InvoiceListItemSkeleton />
+        <InvoiceListItemSkeleton />
+        <InvoiceListItemSkeleton />
+      </div>
+    );
+  }
+
+  if (error || typeof data === 'undefined')
+    return (
+      <div className="text-center">
+        <h4 className="text-2xl leading-[22px] font-bold tracking-[-0.75px] text-[#0C0E16] dark:text-white">
+          An error occured while fetching the data
+        </h4>
+      </div>
+    );
+
+  if (data.invoices.length === 0)
     return (
       <div className="space-y-[2.625rem]">
         <Image
@@ -33,7 +60,7 @@ export function InvoiceList({ invoices }: InvoiceListProps) {
 
   return (
     <div className="space-y-4">
-      {invoices.map((invoice) => (
+      {data.invoices.map((invoice) => (
         <Link
           key={invoice.id}
           href={`/${invoice.id}`}

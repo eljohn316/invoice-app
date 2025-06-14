@@ -11,7 +11,8 @@ import { ArrowDownIcon } from '@/components/icons';
 
 export function FilterDropdown() {
   const router = useRouter();
-  const status = useSearchParams().getAll('status');
+  const searchParams = useSearchParams();
+  const status = searchParams.getAll('status');
 
   function handleCheck(checked: boolean, value: string) {
     const newStatus = checked ? [...status, value] : status.filter((s) => s !== value);

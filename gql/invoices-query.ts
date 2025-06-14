@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-export const InvoicesQuery = gql`
+export const INVOICES_QUERY = gql`
   query Invoices($status: [String]!) {
     invoices(status: $status) {
       id
