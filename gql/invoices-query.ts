@@ -11,3 +11,37 @@ export const InvoicesQuery = gql`
     }
   }
 `;
+
+export const InvoiceQuery = gql`
+  query Invoice($invoiceId: ID!) {
+    invoice(id: $invoiceId) {
+      id
+      createdAt
+      paymentDue
+      description
+      paymentTerms
+      clientName
+      clientEmail
+      status
+      total
+      senderAddress {
+        street
+        city
+        postCode
+        country
+      }
+      clientAddress {
+        street
+        city
+        postCode
+        country
+      }
+      items {
+        name
+        quantity
+        price
+        total
+      }
+    }
+  }
+`;

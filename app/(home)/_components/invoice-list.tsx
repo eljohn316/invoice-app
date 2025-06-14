@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { Text } from '@/components/text';
 import { InvoiceListItem } from '@/app/(home)/_components/invoice-list-item';
 import type { InvoiceItems } from '@/app/(home)/_types/invoice';
+import Link from 'next/link';
 
 interface InvoiceListProps {
   invoices: InvoiceItems;
@@ -33,7 +34,12 @@ export function InvoiceList({ invoices }: InvoiceListProps) {
   return (
     <div className="space-y-4">
       {invoices.map((invoice) => (
-        <InvoiceListItem key={invoice.id} invoice={invoice} />
+        <Link
+          key={invoice.id}
+          href={`/${invoice.id}`}
+          className="block rounded-lg hover:ring hover:ring-[#7C5DFA]">
+          <InvoiceListItem invoice={invoice} />
+        </Link>
       ))}
     </div>
   );

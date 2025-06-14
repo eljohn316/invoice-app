@@ -50,5 +50,6 @@ export const typeDefs = gql`
 
   type Query {
     invoices(status: [String]!): [Invoice]!
+    invoice(id: ID!): Invoice!
   }
 `;
