@@ -14,6 +14,7 @@ import { useStatusParams } from '@/app/(home)/_hooks/use-status-params';
 
 import { client } from '@/lib/graphql-client';
 import { InvoicesQuery } from '@/gql/invoices-query';
+import { Suspense } from 'react';
 
 type Invoices = { invoices: InvoiceItems };
 
@@ -28,28 +29,28 @@ export default function Home() {
 
   if (isLoading)
     return (
-      <>
+      <Suspense>
         <InvoiceListHeaderSkeleton />
         <InvoiceListSkeleton />
-      </>
+      </Suspense>
     );
 
   if (error || typeof data === 'undefined')
     return (
-      <>
+      <Suspense>
         <InvoiceListHeader numInvoices={0} />
         <div className="text-center">
           <h4 className="text-2xl leading-[22px] font-bold tracking-[-0.75px] text-[#0C0E16] dark:text-white">
             An error occured while fetching the data
           </h4>
         </div>
-      </>
+      </Suspense>
     );
 
   return (
-    <>
+    <Suspense>
       <InvoiceListHeader numInvoices={data.invoices.length} />
       <InvoiceList invoices={data.invoices} />
-    </>
+    </Suspense>
   );
 }
