@@ -1,6 +1,7 @@
 'use client';
 
 import useSWR, { Fetcher } from 'swr';
+import { useSearchParams } from 'next/navigation';
 import { RequestDocument } from 'graphql-request';
 
 import { InvoiceList } from '@/app/(home)/_components/invoice-list';
@@ -10,11 +11,9 @@ import {
   InvoiceListHeaderSkeleton
 } from '@/app/(home)/_components/invoice-list-header';
 import type { InvoiceItems } from '@/app/(home)/_types/invoice';
-import { useStatusParams } from '@/app/(home)/_hooks/use-status-params';
 
 import { client } from '@/lib/graphql-client';
 import { InvoicesQuery } from '@/gql/invoices-query';
-import { Suspense } from 'react';
 
 type Invoices = { invoices: InvoiceItems };
 
@@ -24,33 +23,33 @@ const fetcher: Fetcher<Invoices, [RequestDocument, Record<string, PropertyKey>]>
 ]: [RequestDocument, Record<string, PropertyKey>]) => client.request(query, variables);
 
 export default function Home() {
-  const status = useStatusParams();
+  const status = useSearchParams().getAll('status');
   const { isLoading, error, data } = useSWR<Invoices>([InvoicesQuery, { status }], fetcher);
 
   if (isLoading)
     return (
-      <Suspense>
+      <>
         <InvoiceListHeaderSkeleton />
         <InvoiceListSkeleton />
-      </Suspense>
+      </>
     );
 
   if (error || typeof data === 'undefined')
     return (
-      <Suspense>
+      <>
         <InvoiceListHeader numInvoices={0} />
         <div className="text-center">
           <h4 className="text-2xl leading-[22px] font-bold tracking-[-0.75px] text-[#0C0E16] dark:text-white">
             An error occured while fetching the data
           </h4>
         </div>
-      </Suspense>
+      </>
     );
 
   return (
-    <Suspense>
+    <>
       <InvoiceListHeader numInvoices={data.invoices.length} />
       <InvoiceList invoices={data.invoices} />
-    </Suspense>
+    </>
   );
 }
