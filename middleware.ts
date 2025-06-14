@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 
 const allowedOrigins = [
   'https://studio.apollographql.com',
-  'http:localhost:3000',
+  'http://localhost:3000',
   'https://invoice-app-fem.vercel.app'
 ];
 
