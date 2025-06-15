@@ -13,7 +13,7 @@ type Context = {
 
 const InvoicesContext = React.createContext<Context | null>(null);
 
-export function InvoicesProvider({ children }: { children: React.ReactNode }) {
+export function InvoiceListProvider({ children }: { children: React.ReactNode }) {
   const { isLoading, error, data } = useInvoicesQuery();
 
   return (

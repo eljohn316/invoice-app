@@ -12,7 +12,7 @@ export const INVOICES_QUERY = gql`
   }
 `;
 
-export const InvoiceQuery = gql`
+export const INVOICE_QUERY = gql`
   query Invoice($invoiceId: ID!) {
     invoice(id: $invoiceId) {
       id

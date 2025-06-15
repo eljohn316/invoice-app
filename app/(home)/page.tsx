@@ -1,12 +1,12 @@
-import { InvoiceList } from '@/app/(home)/_components/invoice-list';
+import { InvoiceListProvider } from '@/app/(home)/_components/invoice-list-provider';
+import { InvoiceListItems } from '@/app/(home)/_components/invoice-list-items';
 import { InvoiceListHeader } from '@/app/(home)/_components/invoice-list-header';
-import { InvoicesProvider } from '@/app/(home)/_components/invoices-provider';
 
 export default function Home() {
   return (
-    <InvoicesProvider>
+    <InvoiceListProvider>
       <InvoiceListHeader />
-      <InvoiceList />
-    </InvoicesProvider>
+      <InvoiceListItems />
+    </InvoiceListProvider>
   );
 }

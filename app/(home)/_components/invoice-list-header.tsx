@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowDownIcon, PlusIcon } from '@/components/icons';
 import { Skeleton } from '@/components/ui/skeleton';
 import { FilterDropdown } from '@/app/(home)/_components/filter-dropdown';
-import { useInvoices } from '@/app/(home)/_components/invoices-provider';
+import { useInvoices } from '@/app/(home)/_components/invoice-list-provider';
 
 function NumInvoices() {
   const { isLoading, data, error } = useInvoices();

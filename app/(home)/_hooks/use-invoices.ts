@@ -11,7 +11,7 @@ type Invoices = {
 
 type FetcherArgs = [RequestDocument, Record<PropertyKey, string>];
 
-const fetcher: Fetcher<Invoices, FetcherArgs> = ([query, variables]: FetcherArgs) => {
+const fetcher: Fetcher<Invoices, FetcherArgs> = ([query, variables]) => {
   return client.request(query, variables);
 };
 

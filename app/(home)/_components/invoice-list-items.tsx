@@ -8,9 +8,9 @@ import {
   InvoiceListItem,
   InvoiceListItemSkeleton
 } from '@/app/(home)/_components/invoice-list-item';
-import { useInvoices } from '@/app/(home)/_components/invoices-provider';
+import { useInvoices } from '@/app/(home)/_components/invoice-list-provider';
 
-export function InvoiceList() {
+export function InvoiceListItems() {
   const { isLoading, error, data } = useInvoices();
 
   if (isLoading) {
