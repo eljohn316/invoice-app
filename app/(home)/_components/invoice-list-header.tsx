@@ -7,6 +7,7 @@ import { ArrowDownIcon, PlusIcon } from '@/components/icons';
 import { Skeleton } from '@/components/ui/skeleton';
 import { FilterDropdown } from '@/app/(home)/_components/filter-dropdown';
 import { useInvoices } from '@/app/(home)/_components/invoice-list-provider';
+import { CreateInvoiceForm } from '@/components/invoice-form';
 
 function NumInvoices() {
   const { isLoading, data, error } = useInvoices();
@@ -22,7 +23,7 @@ function NumInvoices() {
   );
 }
 
-function InvoiceListHeaderActions() {
+function InvoiceListHeaderActions({ onOpenInvoiceForm }: { onOpenInvoiceForm: () => void }) {
   const { isLoading } = useInvoices();
 
   if (isLoading)
@@ -33,7 +34,10 @@ function InvoiceListHeaderActions() {
           <span className="hidden md:block">Filter by status</span>
           <ArrowDownIcon className="text-[#7C5DFA]" aria-hidden="true" />
         </button>
-        <Button type="button" className="gap-x-2 py-1.5 pr-4 pl-1.5 md:gap-x-4 md:py-2 md:pl-2">
+        <Button
+          type="button"
+          className="gap-x-2 py-1.5 pr-4 pl-1.5 md:gap-x-4 md:py-2 md:pl-2"
+          onClick={() => onOpenInvoiceForm()}>
           <span className="inline-flex size-8 items-center justify-center rounded-full bg-white text-[#7C5DFA]">
             <PlusIcon aria-hidden="true" />
           </span>
@@ -46,7 +50,10 @@ function InvoiceListHeaderActions() {
   return (
     <>
       <FilterDropdown />
-      <Button type="button" className="gap-x-2 py-1.5 pr-4 pl-1.5 md:gap-x-4 md:py-2 md:pl-2">
+      <Button
+        type="button"
+        className="gap-x-2 py-1.5 pr-4 pl-1.5 md:gap-x-4 md:py-2 md:pl-2"
+        onClick={() => onOpenInvoiceForm()}>
         <span className="inline-flex size-8 items-center justify-center rounded-full bg-white text-[#7C5DFA]">
           <PlusIcon aria-hidden="true" />
         </span>
@@ -58,17 +65,22 @@ function InvoiceListHeaderActions() {
 }
 
 export function InvoiceListHeader() {
+  const [open, setOpen] = React.useState(false);
+
   return (
-    <div className="flex items-center justify-between">
-      <div className="space-y-[0.1875rem]">
-        <h4 className="text-2xl leading-[22px] font-bold tracking-[-0.75px] text-[#0C0E16] md:text-4xl md:leading-[33px] md:tracking-[-1.13px] dark:text-white">
-          Invoices
-        </h4>
-        <NumInvoices />
+    <>
+      <CreateInvoiceForm open={open} onOpenChange={setOpen} />
+      <div className="flex items-center justify-between">
+        <div className="space-y-[0.1875rem]">
+          <h4 className="text-2xl leading-[22px] font-bold tracking-[-0.75px] text-[#0C0E16] md:text-4xl md:leading-[33px] md:tracking-[-1.13px] dark:text-white">
+            Invoices
+          </h4>
+          <NumInvoices />
+        </div>
+        <div className="flex items-center gap-x-[1.125rem] md:gap-x-10">
+          <InvoiceListHeaderActions onOpenInvoiceForm={() => setOpen(true)} />
+        </div>
       </div>
-      <div className="flex items-center gap-x-[1.125rem] md:gap-x-10">
-        <InvoiceListHeaderActions />
-      </div>
-    </div>
+    </>
   );
 }

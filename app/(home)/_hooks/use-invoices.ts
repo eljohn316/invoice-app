@@ -18,11 +18,15 @@ const fetcher: Fetcher<Invoices, FetcherArgs> = ([query, variables]) => {
 export function useInvoicesQuery() {
   const searchParams = useSearchParams();
   const status = searchParams.getAll('status');
-  const { isLoading, error, data } = useSWR<Invoices>([INVOICES_QUERY, { status }], fetcher);
+  const { isLoading, error, data, mutate } = useSWR<Invoices>(
+    [INVOICES_QUERY, { status }],
+    fetcher
+  );
 
   return {
     isLoading,
     error: error as ClientError,
-    data
+    data,
+    mutate
   };
 }
