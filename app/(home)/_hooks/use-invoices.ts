@@ -11,12 +11,11 @@ type Invoices = {
 export function useInvoicesQuery() {
   const searchParams = useSearchParams();
   const status = searchParams.getAll('status');
-  const { isLoading, error, data, mutate } = useSWR<Invoices>([INVOICES_QUERY, { status }]);
+  const { isLoading, error, data } = useSWR<Invoices>([INVOICES_QUERY, { status }]);
 
   return {
     isLoading,
     error: error as ClientError,
-    data,
-    mutate
+    data
   };
 }

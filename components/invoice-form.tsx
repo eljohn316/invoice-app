@@ -358,6 +358,7 @@ export function CreateInvoiceForm({
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      createdAt: new Date(),
       senderAddress: {
         street: '19 Union Terrace',
         city: 'London',
