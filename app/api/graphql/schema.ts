@@ -47,9 +47,41 @@ export const typeDefs = gql`
     clientAddress: ClientAddress
     items: [Item]!
   }
+  input AddressInput {
+    street: String
+    city: String
+    postCode: String
+    country: String
+  }
+
+  input ItemInput {
+    name: String!
+    quantity: Int!
+    price: Float!
+    total: Float!
+  }
+
+  input CreateInvoiceInput {
+    id: String!
+    createdAt: Date!
+    paymentDue: Date
+    description: String
+    paymentTerms: Int
+    clientName: String
+    clientEmail: String
+    status: Status
+    total: Float
+    senderAddress: AddressInput
+    clientAddress: AddressInput
+    items: [ItemInput]!
+  }
 
   type Query {
     invoices(status: [String]!): [Invoice]!
     invoice(id: ID!): Invoice!
+  }
+
+  type Mutation {
+    createInvoice(input: CreateInvoiceInput): Invoice!
   }
 `;

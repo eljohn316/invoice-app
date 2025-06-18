@@ -25,31 +25,31 @@ model Invoice {
   status       Status?   @default(draft)
   total        Decimal?
 
-  senderAddress   SenderAddress @relation(fields: [senderAddressId], references: [id], onDelete: Cascade)
-  senderAddressId Int           @unique
+  senderAddress SenderAddress?
 
-  clientAddress   ClientAddress @relation(fields: [clientAddressId], references: [id], onDelete: Cascade)
-  clientAddressId Int           @unique
+  clientAddress ClientAddress?
 
   items Item[]
 }
 
 model SenderAddress {
-  id       Int      @id @default(autoincrement())
-  street   String?
-  city     String?
-  postCode String?
-  country  String?
-  invoice  Invoice?
+  id        Int     @id @default(autoincrement())
+  street    String?
+  city      String?
+  postCode  String?
+  country   String?
+  invoice   Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  invoiceId String  @unique
 }
 
 model ClientAddress {
-  id       Int      @id @default(autoincrement())
-  street   String?
-  city     String?
-  postCode String?
-  country  String?
-  invoice  Invoice?
+  id        Int     @id @default(autoincrement())
+  street    String?
+  city      String?
+  postCode  String?
+  country   String?
+  invoice   Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  invoiceId String  @unique
 }
 
 model Item {

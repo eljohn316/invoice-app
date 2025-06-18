@@ -18,6 +18,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/
 import { CalendarInput } from '@/components/ui/calendar-input';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Text } from '@/components/text';
+import { useInvoices } from '@/app/(home)/_components/invoice-list-provider';
+import { add, format } from 'date-fns';
 
 const formSchema = z.object({
   senderAddress: z.object({
@@ -360,32 +362,59 @@ export function CreateInvoiceForm({
     defaultValues: {
       createdAt: new Date(),
       senderAddress: {
-        street: '19 Union Terrace',
-        city: 'London',
-        postCode: 'E1 3EZ',
-        country: 'United Kingdom'
+        street: '',
+        city: '',
+        postCode: '',
+        country: ''
       },
-      clientName: 'Jensen Huang',
-      clientEmail: 'jensenh@mail.com',
+      clientName: '',
+      clientEmail: '',
       clientAddress: {
-        street: '106 Kendell Street',
-        city: 'Sharrington',
-        postCode: 'NR24 5WQ',
-        country: 'United Kingdom'
+        street: '',
+        city: '',
+        postCode: '',
+        country: ''
       },
-      description: 'Re-branding',
-      paymentTerms: '1',
-      items: [{ name: 'Brand Guidelines', price: 1800.9, quantity: 1 }]
+      description: '',
+      paymentTerms: '',
+      items: [{ name: '', price: 0, quantity: 0 }]
     }
   });
+
+  const { mutate } = useInvoices();
 
   function handleClose(open: boolean) {
     onOpenChange!(open);
     form.reset();
   }
 
-  function onSubmit(values: FormValues) {
-    console.log(values);
+  async function onSubmit(values: FormValues) {
+    const paymentTerms = +values.paymentTerms;
+    const items = values.items.map(({ name, price, quantity }) => ({
+      name,
+      price,
+      quantity,
+      total: price * quantity
+    }));
+    const total = items.reduce((acc, curr) => acc + curr.total, 0);
+
+    await mutate(
+      {
+        id: 'ER1211',
+        clientAddress: values.clientAddress,
+        senderAddress: values.senderAddress,
+        clientEmail: values.clientEmail,
+        clientName: values.clientName,
+        description: values.description,
+        createdAt: format(values.createdAt, 'yyyy-MM-dd'),
+        paymentDue: format(add(values.createdAt, { days: paymentTerms }), 'yyyy-MM-dd'),
+        items,
+        paymentTerms,
+        status: 'pending',
+        total
+      },
+      () => onOpenChange(false)
+    );
   }
 
   return (
