@@ -32,10 +32,10 @@ export function InvoiceDetailsBody({ invoice }: InvoiceDetailsBody) {
           <Text>{invoice.description}</Text>
         </div>
         <div className="space-y-1">
-          <Text>{invoice.senderAddress.street}</Text>
-          <Text>{invoice.senderAddress.city}</Text>
-          <Text>{invoice.senderAddress.postCode}</Text>
-          <Text>{invoice.senderAddress.country}</Text>
+          <Text>{invoice.senderAddress?.street}</Text>
+          <Text>{invoice.senderAddress?.city}</Text>
+          <Text>{invoice.senderAddress?.postCode}</Text>
+          <Text>{invoice.senderAddress?.country}</Text>
         </div>
       </div>
       <div className="mt-[1.875rem] grid grid-cols-2 gap-8 md:mt-5 md:grid-cols-3 md:gap-x-4">
@@ -54,10 +54,10 @@ export function InvoiceDetailsBody({ invoice }: InvoiceDetailsBody) {
           <div className="space-y-2.5">
             <TextBold>{invoice.clientName}</TextBold>
             <div className="space-y-1">
-              <Text>{invoice.clientAddress.street}</Text>
-              <Text>{invoice.clientAddress.city}</Text>
-              <Text>{invoice.clientAddress.postCode}</Text>
-              <Text>{invoice.clientAddress.country}</Text>
+              <Text>{invoice.clientAddress?.street}</Text>
+              <Text>{invoice.clientAddress?.city}</Text>
+              <Text>{invoice.clientAddress?.postCode}</Text>
+              <Text>{invoice.clientAddress?.country}</Text>
             </div>
           </div>
         </div>
