@@ -69,7 +69,7 @@ export function useInvoicesQuery() {
         return {
           invoices: [
             {
-              id: 'EX2123',
+              id: payload.id,
               clientName: payload.clientName,
               status: payload.status,
               paymentDue: new Date(payload.paymentDue),

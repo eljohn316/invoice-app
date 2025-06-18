@@ -20,6 +20,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sh
 import { Text } from '@/components/text';
 import { useInvoices } from '@/app/(home)/_components/invoice-list-provider';
 import { add, format } from 'date-fns';
+import { InvoiceItem } from '@/app/(home)/_types/invoice';
 
 const formSchema = z.object({
   senderAddress: z.object({
@@ -381,14 +382,37 @@ export function CreateInvoiceForm({
     }
   });
 
-  const { mutate } = useInvoices();
+  const { mutate, data } = useInvoices();
 
   function handleClose(open: boolean) {
     onOpenChange!(open);
     form.reset();
   }
 
+  function generateRandomLetter() {
+    const randomCharCode = Math.floor(Math.random() * 26) + 65;
+    return String.fromCharCode(randomCharCode);
+  }
+
+  function generateInvoiceId(invoice: InvoiceItem | undefined) {
+    if (!invoice) {
+      const defaultStartNumber = 1001;
+      const firstLetter = generateRandomLetter();
+      const secondLetter = generateRandomLetter();
+      return `${firstLetter}${secondLetter}${defaultStartNumber}`;
+    }
+
+    const firstLetter = generateRandomLetter();
+    const secondLetter = generateRandomLetter();
+    const parsedIdNumber = +invoice.id.slice(2);
+    const newIdNumber = parsedIdNumber + 1;
+
+    return `${firstLetter}${secondLetter}${newIdNumber}`;
+  }
+
   async function onSubmit(values: FormValues) {
+    const latestInvoice = data?.invoices.at(-1);
+    const generatedInvoiceId = generateInvoiceId(latestInvoice);
     const paymentTerms = +values.paymentTerms;
     const items = values.items.map(({ name, price, quantity }) => ({
       name,
@@ -400,7 +424,7 @@ export function CreateInvoiceForm({
 
     await mutate(
       {
-        id: 'ER1211',
+        id: generatedInvoiceId,
         clientAddress: values.clientAddress,
         senderAddress: values.senderAddress,
         clientEmail: values.clientEmail,
@@ -413,7 +437,7 @@ export function CreateInvoiceForm({
         status: 'pending',
         total
       },
-      () => onOpenChange(false)
+      () => handleClose(false)
     );
   }
 
