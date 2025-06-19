@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Card } from '@/components/ui/card';
 import { Text } from '@/components/text';
 import { cn, formatDate } from '@/lib/utils';
-import { Invoice } from '@/app/[id]/_types/invoice';
+import { InvoiceDetails } from '@/lib/types';
 
 function TextBold({ className, children }: { className?: string; children: React.ReactNode }) {
   return (
@@ -17,7 +17,7 @@ function TextBold({ className, children }: { className?: string; children: React
 }
 
 interface InvoiceDetailsBody {
-  invoice: Invoice;
+  invoice: InvoiceDetails;
 }
 
 export function InvoiceDetailsBody({ invoice }: InvoiceDetailsBody) {
@@ -32,10 +32,10 @@ export function InvoiceDetailsBody({ invoice }: InvoiceDetailsBody) {
           <Text>{invoice.description}</Text>
         </div>
         <div className="space-y-1">
-          <Text>{invoice.senderAddress?.street}</Text>
-          <Text>{invoice.senderAddress?.city}</Text>
-          <Text>{invoice.senderAddress?.postCode}</Text>
-          <Text>{invoice.senderAddress?.country}</Text>
+          <Text>{invoice.senderAddress.street}</Text>
+          <Text>{invoice.senderAddress.city}</Text>
+          <Text>{invoice.senderAddress.postCode}</Text>
+          <Text>{invoice.senderAddress.country}</Text>
         </div>
       </div>
       <div className="mt-[1.875rem] grid grid-cols-2 gap-8 md:mt-5 md:grid-cols-3 md:gap-x-4">
@@ -54,10 +54,10 @@ export function InvoiceDetailsBody({ invoice }: InvoiceDetailsBody) {
           <div className="space-y-2.5">
             <TextBold>{invoice.clientName}</TextBold>
             <div className="space-y-1">
-              <Text>{invoice.clientAddress?.street}</Text>
-              <Text>{invoice.clientAddress?.city}</Text>
-              <Text>{invoice.clientAddress?.postCode}</Text>
-              <Text>{invoice.clientAddress?.country}</Text>
+              <Text>{invoice.clientAddress.street}</Text>
+              <Text>{invoice.clientAddress.city}</Text>
+              <Text>{invoice.clientAddress.postCode}</Text>
+              <Text>{invoice.clientAddress.country}</Text>
             </div>
           </div>
         </div>
@@ -102,11 +102,9 @@ export function InvoiceDetailsBody({ invoice }: InvoiceDetailsBody) {
         </div>
         <div className="flex items-center justify-between bg-[#373B53] px-6 py-8 md:p-8 dark:bg-[#0C0E16]">
           <Text className="text-white">Amount Due</Text>
-          {invoice.total && (
-            <TextBold className="text-2xl leading-8 -tracking-[0.5px] text-white">
-              &pound; {invoice.total.toFixed(2)}
-            </TextBold>
-          )}
+          <TextBold className="text-2xl leading-8 -tracking-[0.5px] text-white">
+            &pound; {invoice.total.toFixed(2)}
+          </TextBold>
         </div>
       </div>
     </Card>

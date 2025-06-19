@@ -2,14 +2,14 @@
 
 import * as React from 'react';
 import { ClientError } from 'graphql-request';
-import { InvoiceItems } from '@/app/(home)/_types/invoice';
-import { CreateInvoiceInput, useInvoicesQuery } from '@/app/(home)/_hooks/use-invoices';
+import { CreateInvoiceArgs, InvoiceItem } from '@/lib/types';
+import { useInvoicesQuery } from '@/app/(home)/_hooks/use-invoices';
 
 type Context = {
   isLoading: boolean;
   error: ClientError;
-  data: { invoices: InvoiceItems } | undefined;
-  mutate: (payload: CreateInvoiceInput, close: () => void) => Promise<void>;
+  data: { invoices: InvoiceItem[] } | undefined;
+  mutate: (payload: CreateInvoiceArgs, close: () => void) => Promise<void>;
 };
 
 const InvoicesContext = React.createContext<Context | null>(null);

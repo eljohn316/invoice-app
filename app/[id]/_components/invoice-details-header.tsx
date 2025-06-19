@@ -3,9 +3,10 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Text } from '@/components/text';
+import { Status } from '@/lib/types';
 
 interface InvoiceDetailsHeaderProps {
-  status: ('draft' | 'pending' | 'paid') | null;
+  status: Status;
   onEdit: () => void;
   onDelete: () => void;
   onMarkasPaid: () => void;

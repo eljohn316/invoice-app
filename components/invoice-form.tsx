@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { z } from 'zod';
 import { useFieldArray, useForm, useFormContext, useWatch } from 'react-hook-form';
+import { add, format } from 'date-fns';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { formatDate } from '@/lib/utils';
 import { ArrowLeftIcon, CalendarIcon, DeleteIcon } from '@/components/icons';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -19,8 +19,8 @@ import { CalendarInput } from '@/components/ui/calendar-input';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Text } from '@/components/text';
 import { useInvoices } from '@/app/(home)/_components/invoice-list-provider';
-import { add, format } from 'date-fns';
-import { InvoiceItem } from '@/app/(home)/_types/invoice';
+import { formatDate } from '@/lib/utils';
+import { InvoiceItem } from '@/lib/types';
 
 const formSchema = z.object({
   senderAddress: z.object({
@@ -378,7 +378,13 @@ export function CreateInvoiceForm({
       },
       description: '',
       paymentTerms: '',
-      items: [{ name: '', price: 0, quantity: 0 }]
+      items: [
+        {
+          name: '',
+          quantity: 0,
+          price: 0
+        }
+      ]
     }
   });
 
@@ -413,7 +419,7 @@ export function CreateInvoiceForm({
   async function onSubmit(values: FormValues) {
     const latestInvoice = data?.invoices.at(-1);
     const generatedInvoiceId = generateInvoiceId(latestInvoice);
-    const paymentTerms = +values.paymentTerms;
+    const paymentTerms = values.paymentTerms;
     const items = values.items.map(({ name, price, quantity }) => ({
       name,
       price,
@@ -431,10 +437,48 @@ export function CreateInvoiceForm({
         clientName: values.clientName,
         description: values.description,
         createdAt: format(values.createdAt, 'yyyy-MM-dd'),
-        paymentDue: format(add(values.createdAt, { days: paymentTerms }), 'yyyy-MM-dd'),
+        paymentDue:
+          paymentTerms === ''
+            ? ''
+            : format(add(values.createdAt, { days: +paymentTerms }), 'yyyy-MM-dd'),
         items,
         paymentTerms,
         status: 'pending',
+        total
+      },
+      () => handleClose(false)
+    );
+  }
+
+  async function onSaveDraft() {
+    const latestInvoice = data?.invoices.at(-1);
+    const generatedInvoiceId = generateInvoiceId(latestInvoice);
+    const values = form.getValues();
+    const paymentTerms = values.paymentTerms;
+    const items = values.items.map(({ name, price, quantity }) => ({
+      name,
+      price,
+      quantity,
+      total: price * quantity
+    }));
+    const total = items.reduce((acc, curr) => acc + curr.total, 0);
+
+    await mutate(
+      {
+        id: generatedInvoiceId,
+        clientAddress: values.clientAddress,
+        senderAddress: values.senderAddress,
+        clientEmail: values.clientEmail,
+        clientName: values.clientName,
+        description: values.description,
+        createdAt: format(values.createdAt, 'yyyy-MM-dd'),
+        paymentDue:
+          paymentTerms === ''
+            ? ''
+            : format(add(values.createdAt, { days: +paymentTerms }), 'yyyy-MM-dd'),
+        items,
+        paymentTerms,
+        status: 'draft',
         total
       },
       () => handleClose(false)
@@ -477,7 +521,11 @@ export function CreateInvoiceForm({
                 onClick={() => handleClose(false)}>
                 Discard
               </Button>
-              <Button type="submit" variant="secondary" className="p-4 md:ml-auto md:px-6">
+              <Button
+                type="button"
+                variant="secondary"
+                className="p-4 md:ml-auto md:px-6"
+                onClick={onSaveDraft}>
                 Save as Draft
               </Button>
               <Button type="submit" variant="primary" className="p-4 md:px-6">

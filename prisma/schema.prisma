@@ -15,39 +15,37 @@ enum Status {
 }
 
 model Invoice {
-  id           String    @id @unique
-  createdAt    DateTime  @default(now())
-  paymentDue   DateTime?
-  description  String?
-  paymentTerms Int?
-  clientName   String?
-  clientEmail  String?
-  status       Status?   @default(draft)
-  total        Decimal?
+  id           String  @id @unique
+  createdAt    String
+  paymentDue   String
+  description  String
+  paymentTerms String
+  clientName   String
+  clientEmail  String
+  status       Status  @default(draft)
+  total        Decimal
 
   senderAddress SenderAddress?
-
   clientAddress ClientAddress?
-
-  items Item[]
+  items         Item[]
 }
 
 model SenderAddress {
   id        Int     @id @default(autoincrement())
-  street    String?
-  city      String?
-  postCode  String?
-  country   String?
+  street    String
+  city      String
+  postCode  String
+  country   String
   invoice   Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
   invoiceId String  @unique
 }
 
 model ClientAddress {
   id        Int     @id @default(autoincrement())
-  street    String?
-  city      String?
-  postCode  String?
-  country   String?
+  street    String
+  city      String
+  postCode  String
+  country   String
   invoice   Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
   invoiceId String  @unique
 }

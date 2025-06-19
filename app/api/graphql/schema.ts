@@ -35,10 +35,10 @@ export const typeDefs = gql`
 
   type Invoice {
     id: ID!
-    createdAt: Date!
-    paymentDue: Date
+    createdAt: String
+    paymentDue: String
     description: String
-    paymentTerms: Int
+    paymentTerms: String
     clientName: String
     clientEmail: String
     status: Status
@@ -47,6 +47,7 @@ export const typeDefs = gql`
     clientAddress: ClientAddress
     items: [Item]!
   }
+
   input AddressInput {
     street: String
     city: String
@@ -63,10 +64,10 @@ export const typeDefs = gql`
 
   input CreateInvoiceInput {
     id: String!
-    createdAt: Date!
-    paymentDue: Date
+    createdAt: String
+    paymentDue: String
     description: String
-    paymentTerms: Int
+    paymentTerms: String
     clientName: String
     clientEmail: String
     status: Status

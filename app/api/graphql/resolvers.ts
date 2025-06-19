@@ -1,23 +1,9 @@
 import { DateResolver } from 'graphql-scalars';
 import { GraphQLError } from 'graphql';
 import { db } from '@/lib/db';
+import { CreateInvoiceArgs } from '@/lib/types';
 
 type Status = 'pending' | 'paid' | 'draft';
-
-type CreateInvoiceInput = {
-  id: string;
-  clientName: string;
-  clientEmail: string;
-  createdAt: Date;
-  paymentDue: Date;
-  paymentTerms: string;
-  description: string;
-  total: number;
-  clientAddress: { street: string; city: string; country: string; postCode: string };
-  senderAddress: { street: string; city: string; country: string; postCode: string };
-  status: 'paid' | 'draft' | 'pending';
-  items: { name: string; quantity: number; price: number; total: number }[];
-};
 
 export const resolvers = {
   Date: DateResolver,
@@ -34,9 +20,6 @@ export const resolvers = {
           clientAddress: true,
           senderAddress: true,
           items: true
-        },
-        orderBy: {
-          createdAt: 'desc'
         }
       });
     },
@@ -56,7 +39,7 @@ export const resolvers = {
     }
   },
   Mutation: {
-    createInvoice: async (_: undefined, { input }: { input: CreateInvoiceInput }) => {
+    createInvoice: async (_: undefined, { input }: { input: CreateInvoiceArgs }) => {
       const newInvoice = await db.invoice.create({
         data: {
           id: input.id,
@@ -64,7 +47,7 @@ export const resolvers = {
           clientEmail: input.clientEmail,
           createdAt: input.createdAt,
           paymentDue: input.paymentDue,
-          paymentTerms: +input.paymentTerms,
+          paymentTerms: input.paymentTerms,
           description: input.description,
           status: input.status,
           total: input.total,

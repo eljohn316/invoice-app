@@ -5,7 +5,7 @@ import { InvoiceStatus } from '@/components/invoice-status';
 import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn, formatDate } from '@/lib/utils';
-import type { InvoiceItem } from '@/app/(home)/_types/invoice';
+import { InvoiceItem } from '@/lib/types';
 
 function TextBold({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
@@ -28,12 +28,14 @@ export function InvoiceListItem({ invoice }: { invoice: InvoiceItem }) {
             <span className="text-[#7E88C3]">#</span>
             {invoice.id}
           </TextBold>
-          <Text>{invoice.clientName}</Text>
+          <Text>{invoice.clientName === '' ? '------' : invoice.clientName}</Text>
         </div>
         <div className="flex items-center justify-between">
           <div className="space-y-[0.5625rem]">
-            {invoice.paymentDue && <Text>Due {formatDate(invoice.paymentDue)}</Text>}
-            {invoice.total && <TextBold>&pound; {+invoice.total}</TextBold>}
+            <Text>
+              {invoice.paymentDue === '' ? '-----' : `Due ${formatDate(invoice.paymentDue)}`}
+            </Text>
+            <TextBold>&pound; {invoice.total.toFixed(2)}</TextBold>
           </div>
           <InvoiceStatus status={invoice.status} />
         </div>
@@ -43,11 +45,13 @@ export function InvoiceListItem({ invoice }: { invoice: InvoiceItem }) {
           <span className="text-[#7E88C3]">#</span>
           {invoice.id}
         </TextBold>
-        {invoice.paymentDue && (
-          <Text className="ml-7 max-w-24 flex-auto">Due {formatDate(invoice.paymentDue)}</Text>
-        )}
-        <Text className="ml-12 flex-1">{invoice.clientName}</Text>
-        {invoice.total && <TextBold className="shrink-0">&pound; {+invoice.total}</TextBold>}
+        <Text className="ml-7 max-w-24 flex-auto">
+          {invoice.paymentDue === '' ? '-----' : `Due ${formatDate(invoice.paymentDue)}`}
+        </Text>
+        <Text className="ml-12 flex-1">
+          {invoice.clientName === '' ? '------' : invoice.clientName}
+        </Text>
+        <TextBold className="shrink-0">&pound; {invoice.total.toFixed(2)}</TextBold>
         <InvoiceStatus status={invoice.status} className="ml-10 max-w-[6.5rem] flex-none" />
         <div className="ml-5 flex-none">
           <span className="sr-only">View invoice</span>
