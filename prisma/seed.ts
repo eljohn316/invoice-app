@@ -211,9 +211,9 @@ async function main() {
           id: invoice.id,
           clientName: invoice.clientName,
           clientEmail: invoice.clientEmail,
-          createdAt: new Date(invoice.createdAt),
-          paymentDue: new Date(invoice.paymentDue),
-          paymentTerms: invoice.paymentTerms,
+          createdAt: invoice.createdAt,
+          paymentDue: invoice.paymentDue,
+          paymentTerms: `${invoice.paymentTerms}`,
           description: invoice.description,
           total: invoice.total,
           clientAddress: {
