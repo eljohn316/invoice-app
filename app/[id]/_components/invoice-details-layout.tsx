@@ -6,7 +6,7 @@ import { ArrowLeftIcon } from '@/components/icons';
 
 export function InvoiceDetailsLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="space-y-8">
+    <div id="invoice-details" className="space-y-8">
       <Link
         href="/"
         className="inline-flex cursor-pointer items-center gap-x-6 text-[15px] font-bold -tracking-[0.25px] text-[#0C0E16] dark:text-white">

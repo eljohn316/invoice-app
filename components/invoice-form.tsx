@@ -20,7 +20,8 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sh
 import { Text } from '@/components/text';
 import { useInvoices } from '@/app/(home)/_components/invoice-list-provider';
 import { formatDate } from '@/lib/utils';
-import { InvoiceItem } from '@/lib/types';
+import { InvoiceDetails, InvoiceItem } from '@/lib/types';
+import { useInvoiceDetails } from '@/app/[id]/_hooks/use-invoice-details';
 
 const formSchema = z.object({
   senderAddress: z.object({
@@ -530,6 +531,139 @@ export function CreateInvoiceForm({
               </Button>
               <Button type="submit" variant="primary" className="p-4 md:px-6">
                 Save & Send
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </SheetContent>
+    </Sheet>
+  );
+}
+
+const updateFormSchema = formSchema.omit({ items: true }).extend({
+  items: z
+    .object({
+      id: z.coerce.number(),
+      name: z.string().min(1, { message: "Can't be empty" }),
+      quantity: z.coerce.number(),
+      price: z.coerce.number()
+    })
+    .array()
+});
+
+type UpdateFormValues = z.infer<typeof updateFormSchema>;
+
+export function UpdateInvoiceForm({
+  open,
+  onOpenChange,
+  invoice,
+  ...props
+}: React.ComponentProps<typeof Sheet> & {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  invoice: InvoiceDetails;
+}) {
+  const { mutate } = useInvoiceDetails();
+  const form = useForm<UpdateFormValues>({
+    resolver: zodResolver(updateFormSchema),
+    defaultValues: {
+      createdAt: new Date(invoice.createdAt),
+      senderAddress: invoice.senderAddress,
+      clientAddress: invoice.clientAddress,
+      clientName: invoice.clientName,
+      clientEmail: invoice.clientEmail,
+      description: invoice.description,
+      paymentTerms: invoice.paymentTerms,
+      items: invoice.items
+    }
+  });
+
+  function handleClose(open: boolean) {
+    onOpenChange!(open);
+    form.reset();
+  }
+
+  async function onSubmit(values: UpdateFormValues) {
+    const paymentTerms = values.paymentTerms;
+    const items = values.items.map(({ id, name, price, quantity }) => ({
+      id,
+      name,
+      price,
+      quantity,
+      total: price * quantity
+    }));
+    const total = items.reduce((acc, curr) => acc + curr.total, 0);
+
+    await mutate(
+      invoice.id,
+      {
+        clientAddress: values.clientAddress,
+        senderAddress: values.senderAddress,
+        clientEmail: values.clientEmail,
+        clientName: values.clientName,
+        description: values.description,
+        createdAt: format(values.createdAt, 'yyyy-MM-dd'),
+        paymentDue:
+          paymentTerms === ''
+            ? ''
+            : format(add(values.createdAt, { days: +paymentTerms }), 'yyyy-MM-dd'),
+        status: invoice.status === 'draft' ? 'pending' : invoice.status,
+        items,
+        paymentTerms,
+        total
+      },
+      () => handleClose(false)
+    );
+
+    form.setValue('clientName', values.clientName);
+    form.setValue('clientEmail', values.clientEmail);
+    form.setValue('description', values.description);
+    form.setValue('clientAddress', values.clientAddress);
+    form.setValue('senderAddress', values.senderAddress);
+    form.setValue('createdAt', values.createdAt);
+    form.setValue('paymentTerms', values.paymentTerms);
+    form.setValue('items', values.items);
+  }
+
+  return (
+    <Sheet open={open} onOpenChange={handleClose} {...props}>
+      <SheetContent className="p-0">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex h-[calc(100%-80px)] w-full flex-col px-6 py-8 md:px-14 md:py-[3.75rem] lg:h-full">
+            <div className="flex-1 overflow-y-auto px-4 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-sm [&::-webkit-scrollbar-thumb]:bg-[#DFE3FA] dark:[&::-webkit-scrollbar-thumb]:bg-[#252945] [&::-webkit-scrollbar-track]:bg-transparent">
+              <SheetHeader>
+                <button
+                  type="button"
+                  className="inline-flex cursor-pointer items-center gap-x-6 text-[15px] font-bold -tracking-[0.25px] text-[#0C0E16] md:hidden dark:text-white"
+                  onClick={() => handleClose(false)}>
+                  <ArrowLeftIcon />
+                  <span>Go Back</span>
+                </button>
+                <SheetTitle className="text-2xl leading-8 font-bold -tracking-[0.5px] text-[#0C0E16] dark:text-white">
+                  Edit <span className="text-[#888EB0]">#</span>
+                  {invoice.id}
+                </SheetTitle>
+              </SheetHeader>
+              <div className="mt-6 space-y-10 md:mt-[2.875rem]">
+                <SenderAddressFields />
+                <ClientFields />
+                <InvoiceDetailsFields />
+                <InvoiceItemsFields />
+              </div>
+            </div>
+            <div className="-mx-6 h-4 flex-none bg-transparent md:-mx-14 md:h-20" />
+            <div className="md:rounde-tr relative -mx-6 -mb-8 flex flex-none justify-center gap-x-2 bg-white px-6 py-5 md:-mx-14 md:-my-[3.75rem] md:justify-end md:px-14 dark:bg-[#1E2139]">
+              <Button
+                type="button"
+                variant="light"
+                className="p-4 md:px-6"
+                onClick={() => handleClose(false)}>
+                Cancel
+              </Button>
+              <Button type="submit" variant="primary" className="p-4 md:px-6">
+                Save changes
               </Button>
             </div>
           </form>

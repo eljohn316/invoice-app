@@ -37,6 +37,7 @@ export const INVOICE_QUERY = gql`
         country
       }
       items {
+        id
         name
         quantity
         price

@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useInvoiceDetails } from '@/app/[id]/_hooks/use-invoice-details';
 import {
   InvoiceDetailsBody,
@@ -9,9 +10,43 @@ import {
   InvoiceDetailsHeader,
   InvoiceDetailsHeaderSkeleton
 } from '@/app/[id]/_components/invoice-details-header';
+import { UpdateInvoiceForm } from '@/components/invoice-form';
+import { add, format } from 'date-fns';
 
 export function InvoiceDetails() {
-  const { isLoading, error, data } = useInvoiceDetails();
+  const [edit, setEdit] = useState(false);
+  const { isLoading, error, data, mutate } = useInvoiceDetails();
+
+  async function handleMarkAsPaid() {
+    if (!data) return;
+
+    const paymentTerms = data.invoice.paymentTerms;
+    const items = data.invoice.items.map(({ id, name, price, quantity }) => ({
+      id,
+      name,
+      price,
+      quantity,
+      total: price * quantity
+    }));
+    const total = items.reduce((acc, curr) => acc + curr.total, 0);
+
+    await mutate(data.invoice.id, {
+      clientName: data.invoice.clientName,
+      clientEmail: data.invoice.clientEmail,
+      description: data.invoice.description,
+      clientAddress: data.invoice.clientAddress,
+      senderAddress: data.invoice.senderAddress,
+      createdAt: format(data.invoice.createdAt, 'yyyy-MM-dd'),
+      paymentDue:
+        paymentTerms === ''
+          ? ''
+          : format(add(data.invoice.createdAt, { days: +paymentTerms }), 'yyyy-MM-dd'),
+      status: 'paid',
+      items,
+      paymentTerms,
+      total
+    });
+  }
 
   if (isLoading)
     return (
@@ -35,10 +70,11 @@ export function InvoiceDetails() {
 
   return (
     <>
+      <UpdateInvoiceForm open={edit} onOpenChange={setEdit} invoice={data.invoice} />
       <InvoiceDetailsHeader
         status={data.invoice.status}
-        onMarkasPaid={() => {}}
-        onEdit={() => {}}
+        onMarkasPaid={handleMarkAsPaid}
+        onEdit={() => setEdit(true)}
         onDelete={() => {}}
       />
       <InvoiceDetailsBody invoice={data.invoice} />

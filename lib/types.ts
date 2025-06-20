@@ -23,6 +23,21 @@ export type InvoiceItem = {
   status: Status;
 };
 
+export type InvoiceDetails = {
+  id: string;
+  description: string;
+  createdAt: string;
+  paymentDue: string;
+  paymentTerms: string;
+  clientName: string;
+  clientEmail: string;
+  status: Status;
+  total: number;
+  senderAddress: Address;
+  clientAddress: Address;
+  items: Item[];
+};
+
 export type CreateInvoiceArgs = {
   id: string;
   createdAt: string;
@@ -38,17 +53,16 @@ export type CreateInvoiceArgs = {
   total: number;
 };
 
-export type InvoiceDetails = {
-  id: string;
-  description: string;
+export type UpdateInvoiceArgs = {
   createdAt: string;
   paymentDue: string;
+  description: string;
   paymentTerms: string;
   clientName: string;
   clientEmail: string;
   status: Status;
-  total: number;
   senderAddress: Address;
   clientAddress: Address;
   items: Item[];
+  total: number;
 };

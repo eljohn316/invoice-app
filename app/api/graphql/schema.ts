@@ -56,6 +56,7 @@ export const typeDefs = gql`
   }
 
   input ItemInput {
+    id: ID
     name: String!
     quantity: Int!
     price: Float!
@@ -77,6 +78,20 @@ export const typeDefs = gql`
     items: [ItemInput]!
   }
 
+  input UpdateInvoiceInput {
+    createdAt: String
+    paymentDue: String
+    description: String
+    paymentTerms: String
+    clientName: String
+    clientEmail: String
+    status: Status
+    total: Float
+    senderAddress: AddressInput
+    clientAddress: AddressInput
+    items: [ItemInput]!
+  }
+
   type Query {
     invoices(status: [String]!): [Invoice]!
     invoice(id: ID!): Invoice!
@@ -84,5 +99,6 @@ export const typeDefs = gql`
 
   type Mutation {
     createInvoice(input: CreateInvoiceInput): Invoice!
+    updateInvoice(id: ID!, input: UpdateInvoiceInput): Invoice!
   }
 `;

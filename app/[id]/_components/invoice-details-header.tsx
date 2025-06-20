@@ -1,3 +1,4 @@
+import { Portal } from '@radix-ui/react-portal';
 import { InvoiceStatus } from '@/components/invoice-status';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -23,18 +24,38 @@ export function InvoiceDetailsHeader({
       <Text>Status</Text>
       <InvoiceStatus status={status} className="md:ml-5" />
       <div className="hidden md:ml-auto md:flex md:gap-x-2">
-        <Button variant="light" onClick={() => onEdit()}>
+        <Button variant="light" onClick={onEdit}>
           Edit
         </Button>
-        <Button variant="danger" onClick={() => onDelete()}>
+        <Button variant="danger" onClick={onDelete}>
           Delete
         </Button>
         {status !== 'paid' && (
-          <Button variant="primary" onClick={() => onMarkasPaid()}>
+          <Button variant="primary" onClick={onMarkasPaid}>
             Mark as Paid
           </Button>
         )}
       </div>
+      <Portal
+        container={document.getElementById('invoice-details')}
+        className="-mx-6 -my-8 mt-14 flex justify-center gap-x-2 bg-white px-6 py-[1.375rem] md:hidden dark:bg-[#1E2139]">
+        <Button
+          variant="light"
+          onClick={() => {
+            window.scrollTo({ top: 0, behavior: 'instant' });
+            onEdit();
+          }}>
+          Edit
+        </Button>
+        <Button variant="danger" onClick={onDelete}>
+          Delete
+        </Button>
+        {status !== 'paid' && (
+          <Button variant="primary" onClick={onMarkasPaid}>
+            Mark as Paid
+          </Button>
+        )}
+      </Portal>
     </Card>
   );
 }
