@@ -17,7 +17,7 @@ export type Status = 'paid' | 'draft' | 'pending';
 
 export type InvoiceItem = {
   id: string;
-  paymentDue: string;
+  paymentDue: string | null;
   clientName: string;
   total: number;
   status: Status;

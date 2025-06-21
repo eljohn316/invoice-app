@@ -32,9 +32,7 @@ export function InvoiceListItem({ invoice }: { invoice: InvoiceItem }) {
         </div>
         <div className="flex items-center justify-between">
           <div className="space-y-[0.5625rem]">
-            <Text>
-              {invoice.paymentDue === '' ? '-----' : `Due ${formatDate(invoice.paymentDue)}`}
-            </Text>
+            <Text>{invoice.paymentDue ? `Due ${formatDate(invoice.paymentDue)}` : '-----'}</Text>
             <TextBold>&pound; {invoice.total.toFixed(2)}</TextBold>
           </div>
           <InvoiceStatus status={invoice.status} />
@@ -46,7 +44,7 @@ export function InvoiceListItem({ invoice }: { invoice: InvoiceItem }) {
           {invoice.id}
         </TextBold>
         <Text className="ml-7 max-w-24 flex-auto">
-          {invoice.paymentDue === '' ? '-----' : `Due ${formatDate(invoice.paymentDue)}`}
+          {invoice.paymentDue ? `Due ${formatDate(invoice.paymentDue)}` : '-----'}
         </Text>
         <Text className="ml-12 flex-1">
           {invoice.clientName === '' ? '------' : invoice.clientName}
