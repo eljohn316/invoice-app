@@ -1,22 +1,31 @@
-import useSWR from 'swr';
+import useSWR, { KeyedMutator } from 'swr';
 import { useParams } from 'next/navigation';
 import { ClientError } from 'graphql-request';
 import { INVOICE_QUERY } from '@/gql/invoices-query';
-import { InvoiceDetails, UpdateInvoiceArgs } from '@/lib/types';
+import { InvoiceDetails, InvoiceItem, UpdateInvoiceArgs } from '@/lib/types';
 import { client } from '@/lib/graphql-client';
 import { UPDATE_INVOICE_MUTATION } from '@/gql/invoices-mutation';
+import { useInvoices } from '@/components/invoice-list-provider';
 
-const updateInvoice = async (updateInvoiceId: string, input: UpdateInvoiceArgs) => {
+const updateInvoice = async (
+  updateInvoiceId: string,
+  input: UpdateInvoiceArgs,
+  revalidator: KeyedMutator<{
+    invoices: InvoiceItem[];
+  }>
+) => {
   const { updateInvoice } = await client.request<{ updateInvoice: InvoiceDetails }>(
     UPDATE_INVOICE_MUTATION,
     { updateInvoiceId, input }
   );
+  await revalidator();
   return {
     invoice: updateInvoice
   };
 };
 
 export function useInvoiceDetails() {
+  const { revalidateInvoices } = useInvoices();
   const { id } = useParams<{ id: string }>();
   const {
     isLoading,
@@ -32,7 +41,7 @@ export function useInvoiceDetails() {
   });
 
   const mutate = async (id: string, payload: UpdateInvoiceArgs, close?: () => void) => {
-    mutateInvoice(() => updateInvoice(id, payload), {
+    mutateInvoice(async () => updateInvoice(id, payload, revalidateInvoices), {
       optimisticData: () => {
         if (typeof close !== 'undefined') {
           close();

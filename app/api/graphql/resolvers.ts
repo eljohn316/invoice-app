@@ -2,6 +2,7 @@ import { DateTimeResolver } from 'graphql-scalars';
 import { GraphQLError } from 'graphql';
 import { db } from '@/lib/db';
 import { CreateInvoiceArgs, UpdateInvoiceArgs } from '@/lib/types';
+import { revalidatePath } from 'next/cache';
 
 type Status = 'pending' | 'paid' | 'draft';
 
@@ -135,6 +136,8 @@ export const resolvers = {
           items: true
         }
       });
+
+      revalidatePath(`/${newInvoice.id}`);
       return newInvoice;
     },
     deleteInvoice: async (_: undefined, { id }: { id: string }) => {

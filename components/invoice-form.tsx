@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { z } from 'zod';
 import { useFieldArray, useForm, useFormContext, useWatch } from 'react-hook-form';
-import { add, format } from 'date-fns';
+import { add } from 'date-fns';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeftIcon, CalendarIcon, DeleteIcon } from '@/components/icons';
 import { Input } from '@/components/ui/input';
@@ -598,11 +598,8 @@ export function UpdateInvoiceForm({
         clientEmail: values.clientEmail,
         clientName: values.clientName,
         description: values.description,
-        createdAt: format(values.createdAt, 'yyyy-MM-dd'),
-        paymentDue:
-          paymentTerms === ''
-            ? ''
-            : format(add(values.createdAt, { days: +paymentTerms }), 'yyyy-MM-dd'),
+        createdAt: values.createdAt.toISOString(),
+        paymentDue: add(values.createdAt, { days: +paymentTerms }).toISOString(),
         status: invoice.status === 'draft' ? 'pending' : invoice.status,
         items,
         paymentTerms,

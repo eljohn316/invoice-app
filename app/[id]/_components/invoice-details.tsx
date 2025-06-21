@@ -11,7 +11,6 @@ import {
   InvoiceDetailsHeaderSkeleton
 } from '@/app/[id]/_components/invoice-details-header';
 import { UpdateInvoiceForm } from '@/components/invoice-form';
-import { add, format } from 'date-fns';
 import { InvoiceDeleteModal } from './invoice-delete-modal';
 
 export function InvoiceDetails() {
@@ -38,11 +37,8 @@ export function InvoiceDetails() {
       description: data.invoice.description,
       clientAddress: data.invoice.clientAddress,
       senderAddress: data.invoice.senderAddress,
-      createdAt: format(data.invoice.createdAt, 'yyyy-MM-dd'),
-      paymentDue:
-        paymentTerms === ''
-          ? ''
-          : format(add(data.invoice.createdAt, { days: +paymentTerms }), 'yyyy-MM-dd'),
+      createdAt: data.invoice.createdAt,
+      paymentDue: data.invoice.paymentDue,
       status: 'paid',
       items,
       paymentTerms,
