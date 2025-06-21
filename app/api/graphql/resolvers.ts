@@ -1,4 +1,4 @@
-import { DateResolver } from 'graphql-scalars';
+import { DateTimeResolver } from 'graphql-scalars';
 import { GraphQLError } from 'graphql';
 import { db } from '@/lib/db';
 import { CreateInvoiceArgs, UpdateInvoiceArgs } from '@/lib/types';
@@ -6,13 +6,13 @@ import { CreateInvoiceArgs, UpdateInvoiceArgs } from '@/lib/types';
 type Status = 'pending' | 'paid' | 'draft';
 
 export const resolvers = {
-  Date: DateResolver,
+  DateTime: DateTimeResolver,
   Query: {
     invoices: async (_: undefined, args: { status: Status[] }) => {
       const status: Status[] =
         args.status.length === 0 ? ['pending', 'paid', 'draft'] : args.status;
 
-      return await db.invoice.findMany({
+      const invoices = await db.invoice.findMany({
         where: {
           status: { in: status }
         },
@@ -20,8 +20,13 @@ export const resolvers = {
           clientAddress: true,
           senderAddress: true,
           items: true
+        },
+        orderBy: {
+          createdAt: 'desc'
         }
       });
+
+      return invoices;
     },
     invoice: async (_: undefined, args: { id: string }) => {
       const invoice = await db.invoice.findUnique({

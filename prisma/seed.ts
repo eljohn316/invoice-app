@@ -211,8 +211,6 @@ async function main() {
           id: invoice.id,
           clientName: invoice.clientName,
           clientEmail: invoice.clientEmail,
-          createdAt: invoice.createdAt,
-          paymentDue: invoice.paymentDue,
           paymentTerms: `${invoice.paymentTerms}`,
           description: invoice.description,
           total: invoice.total,
@@ -240,7 +238,9 @@ async function main() {
               quantity: item.quantity,
               total: item.total
             }))
-          }
+          },
+          createdAt: new Date(invoice.createdAt),
+          paymentDue: new Date(invoice.paymentDue)
         }
       });
 

@@ -1,7 +1,7 @@
 import { gql } from 'graphql-tag';
 
 export const typeDefs = gql`
-  scalar Date
+  scalar DateTime
 
   enum Status {
     pending
@@ -35,8 +35,8 @@ export const typeDefs = gql`
 
   type Invoice {
     id: ID!
-    createdAt: String
-    paymentDue: String
+    createdAt: DateTime
+    paymentDue: DateTime
     description: String
     paymentTerms: String
     clientName: String
@@ -65,8 +65,8 @@ export const typeDefs = gql`
 
   input CreateInvoiceInput {
     id: String!
-    createdAt: String
-    paymentDue: String
+    createdAt: DateTime
+    paymentDue: DateTime
     description: String
     paymentTerms: String
     clientName: String
@@ -79,8 +79,8 @@ export const typeDefs = gql`
   }
 
   input UpdateInvoiceInput {
-    createdAt: String
-    paymentDue: String
+    createdAt: DateTime
+    paymentDue: DateTime
     description: String
     paymentTerms: String
     clientName: String
