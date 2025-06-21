@@ -7,6 +7,7 @@ import { Navigation } from '@/components/navigation';
 import { ThemeProvider } from '@/components/theme-provider';
 import { SWRProvider } from '@/components/swr-provider';
 import { cn } from '@/lib/utils';
+import { InvoiceListProvider } from '@/components/invoice-list-provider';
 
 const leagueSpartan = League_Spartan({
   variable: '--font-league-spartan',
@@ -35,10 +36,12 @@ export default function RootLayout({
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange>
-            <Navigation />
-            <div className="relative flex-1 px-6 py-8 md:px-12 md:py-[3.75rem] lg:mx-auto lg:max-w-[45.625rem] lg:px-4 lg:py-[4.875rem]">
-              {children}
-            </div>
+            <InvoiceListProvider>
+              <Navigation />
+              <div className="relative flex-1 px-6 py-8 md:px-12 md:py-[3.75rem] lg:mx-auto lg:max-w-[45.625rem] lg:px-4 lg:py-[4.875rem]">
+                {children}
+              </div>
+            </InvoiceListProvider>
           </ThemeProvider>
         </SWRProvider>
       </body>

@@ -131,6 +131,20 @@ export const resolvers = {
         }
       });
       return newInvoice;
+    },
+    deleteInvoice: async (_: undefined, { id }: { id: string }) => {
+      const invoice = await db.invoice.delete({
+        where: {
+          id
+        },
+        include: {
+          clientAddress: true,
+          senderAddress: true,
+          items: true
+        }
+      });
+
+      return invoice;
     }
   }
 };

@@ -100,5 +100,6 @@ export const typeDefs = gql`
   type Mutation {
     createInvoice(input: CreateInvoiceInput): Invoice!
     updateInvoice(id: ID!, input: UpdateInvoiceInput): Invoice!
+    deleteInvoice(id: ID!): Invoice!
   }
 `;

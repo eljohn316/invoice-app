@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { useRouter } from 'next/navigation';
 import {
   Dialog,
   DialogContent,
@@ -10,7 +11,9 @@ import {
   DialogFooter
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-// import { useRouter } from 'next/navigation';
+import { client } from '@/lib/graphql-client';
+import { DELETE_INVOICE_MUTATION } from '@/gql/invoices-mutation';
+import { useInvoices } from '@/components/invoice-list-provider';
 
 export function InvoiceDeleteModal({
   open,
@@ -23,14 +26,16 @@ export function InvoiceDeleteModal({
   invoiceId: string;
 }) {
   const [isDeleting, setIsDeleting] = React.useState(false);
-  // const router = useRouter();
+  const router = useRouter();
+  const { revalidateInvoices } = useInvoices();
 
   async function handleDelete() {
     setIsDeleting(true);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    // router.replace('/');
-    // setIsDeleting(false);
+    await client.request(DELETE_INVOICE_MUTATION, {
+      deleteInvoiceId: invoiceId
+    });
+    await revalidateInvoices();
+    router.replace('/');
   }
 
   return (

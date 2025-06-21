@@ -18,7 +18,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/
 import { CalendarInput } from '@/components/ui/calendar-input';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Text } from '@/components/text';
-import { useInvoices } from '@/app/(home)/_components/invoice-list-provider';
+import { useInvoices } from '@/components/invoice-list-provider';
 import { formatDate } from '@/lib/utils';
 import { InvoiceDetails, InvoiceItem } from '@/lib/types';
 import { useInvoiceDetails } from '@/app/[id]/_hooks/use-invoice-details';

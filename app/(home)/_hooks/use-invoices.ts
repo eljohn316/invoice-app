@@ -58,6 +58,7 @@ export function useInvoicesQuery() {
     isLoading,
     error: error as ClientError,
     data,
-    mutate
+    mutate,
+    revalidateInvoices: mutateInvoices
   };
 }

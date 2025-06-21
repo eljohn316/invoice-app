@@ -46,3 +46,38 @@ export const UPDATE_INVOICE_MUTATION = gql`
     }
   }
 `;
+
+export const DELETE_INVOICE_MUTATION = gql`
+  mutation Mutation($deleteInvoiceId: ID!) {
+    deleteInvoice(id: $deleteInvoiceId) {
+      id
+      createdAt
+      paymentDue
+      description
+      paymentTerms
+      clientName
+      clientEmail
+      status
+      total
+      senderAddress {
+        street
+        city
+        postCode
+        country
+      }
+      clientAddress {
+        street
+        city
+        postCode
+        country
+      }
+      items {
+        id
+        name
+        quantity
+        price
+        total
+      }
+    }
+  }
+`;
