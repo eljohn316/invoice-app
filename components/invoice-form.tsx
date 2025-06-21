@@ -437,11 +437,9 @@ export function CreateInvoiceForm({
         clientEmail: values.clientEmail,
         clientName: values.clientName,
         description: values.description,
-        createdAt: format(values.createdAt, 'yyyy-MM-dd'),
+        createdAt: values.createdAt.toISOString(),
         paymentDue:
-          paymentTerms === ''
-            ? ''
-            : format(add(values.createdAt, { days: +paymentTerms }), 'yyyy-MM-dd'),
+          paymentTerms === '' ? null : add(values.createdAt, { days: +paymentTerms }).toISOString(),
         items,
         paymentTerms,
         status: 'pending',
@@ -472,11 +470,9 @@ export function CreateInvoiceForm({
         clientEmail: values.clientEmail,
         clientName: values.clientName,
         description: values.description,
-        createdAt: format(values.createdAt, 'yyyy-MM-dd'),
+        createdAt: values.createdAt.toISOString(),
         paymentDue:
-          paymentTerms === ''
-            ? ''
-            : format(add(values.createdAt, { days: +paymentTerms }), 'yyyy-MM-dd'),
+          paymentTerms === '' ? null : add(values.createdAt, { days: +paymentTerms }).toISOString(),
         items,
         paymentTerms,
         status: 'draft',

@@ -41,7 +41,7 @@ export type InvoiceDetails = {
 export type CreateInvoiceArgs = {
   id: string;
   createdAt: string;
-  paymentDue: string;
+  paymentDue: string | null;
   description: string;
   paymentTerms: string;
   clientName: string;

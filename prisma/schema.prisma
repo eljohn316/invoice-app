@@ -15,14 +15,14 @@ enum Status {
 }
 
 model Invoice {
-  id           String   @id @unique
-  createdAt    DateTime @default(now())
-  paymentDue   DateTime
+  id           String    @id @unique
+  createdAt    DateTime  @default(now())
+  paymentDue   DateTime?
   description  String
   paymentTerms String
   clientName   String
   clientEmail  String
-  status       Status   @default(draft)
+  status       Status    @default(draft)
   total        Decimal
 
   senderAddress SenderAddress?
