@@ -4,7 +4,7 @@ import { Slot } from '@radix-ui/react-slot';
 import { cn } from '@/lib/utils';
 
 export const buttonVariants = cva(
-  'inline-flex cursor-pointer items-center justify-center rounded-3xl px-6 py-[1.125rem] text-[0.9375rem] leading-none font-bold -tracking-[0.25px]',
+  'inline-flex cursor-pointer items-center justify-center rounded-3xl px-6 py-[1.125rem] text-[0.9375rem] leading-none font-bold -tracking-[0.25px] disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
       variant: {
@@ -41,10 +41,7 @@ export function Button({
 
   return (
     <Comp
-      className={cn(
-        buttonVariants({ variant, className }),
-        full && 'w-full justify-center'
-      )}
+      className={cn(buttonVariants({ variant, className }), full && 'w-full justify-center')}
       {...props}>
       {children}
     </Comp>

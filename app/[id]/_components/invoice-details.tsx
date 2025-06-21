@@ -12,9 +12,11 @@ import {
 } from '@/app/[id]/_components/invoice-details-header';
 import { UpdateInvoiceForm } from '@/components/invoice-form';
 import { add, format } from 'date-fns';
+import { InvoiceDeleteModal } from './invoice-delete-modal';
 
 export function InvoiceDetails() {
-  const [edit, setEdit] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
   const { isLoading, error, data, mutate } = useInvoiceDetails();
 
   async function handleMarkAsPaid() {
@@ -70,12 +72,17 @@ export function InvoiceDetails() {
 
   return (
     <>
-      <UpdateInvoiceForm open={edit} onOpenChange={setEdit} invoice={data.invoice} />
+      <UpdateInvoiceForm open={showEdit} onOpenChange={setShowEdit} invoice={data.invoice} />
+      <InvoiceDeleteModal
+        open={showDelete}
+        onOpenChange={setShowDelete}
+        invoiceId={data.invoice.id}
+      />
       <InvoiceDetailsHeader
         status={data.invoice.status}
         onMarkasPaid={handleMarkAsPaid}
-        onEdit={() => setEdit(true)}
-        onDelete={() => {}}
+        onEdit={() => setShowEdit(true)}
+        onDelete={() => setShowDelete(true)}
       />
       <InvoiceDetailsBody invoice={data.invoice} />
     </>
